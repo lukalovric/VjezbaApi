@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Linq;
+
 
 namespace Project.WebApi.Controllers
 {
@@ -26,21 +25,24 @@ namespace Project.WebApi.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Employee>> GetEmployees()
         {
-            return _employees;
+            return Ok(_employees);
         }
+
 
         [HttpGet("{id}")]
         public ActionResult<Employee> GetEmployee(string id)
         {
-            var employee = _employees.FirstOrDefault(e => e.EmployeeID == id);
-
-            if (employee == null)
+            foreach (var employee in _employees)
             {
-                return NotFound();
+                if (employee.EmployeeID == id)
+                {
+                    return Ok(employee);
+                }
             }
-
-            return employee;
+            return NotFound();
         }
+
+
 
         [HttpPut("{id}")]
         public IActionResult PutEmployee(string id, Employee employee)
@@ -50,7 +52,16 @@ namespace Project.WebApi.Controllers
                 return BadRequest();
             }
 
-            var existingEmployee = _employees.FirstOrDefault(e => e.EmployeeID == id);
+            Employee existingEmployee = null;
+            foreach (var emp in _employees)
+            {
+                if (emp.EmployeeID == id)
+                {
+                    existingEmployee = emp;
+                    break;
+                }
+            }
+
             if (existingEmployee == null)
             {
                 return NotFound();
@@ -64,12 +75,14 @@ namespace Project.WebApi.Controllers
             return NoContent();
         }
 
+
         [HttpPost]
         public ActionResult<Employee> PostEmployee(Employee employee)
         {
             _employees.Add(employee);
-            return CreatedAtAction("GetEmployee", new { id = employee.EmployeeID }, employee);
+            return CreatedAtAction(nameof(GetEmployee), new { id = employee.EmployeeID }, employee);
         }
+
 
         [HttpDelete("{id}")]
         public IActionResult DeleteEmployee(string id)
@@ -79,9 +92,9 @@ namespace Project.WebApi.Controllers
             {
                 return NotFound();
             }
-
             _employees.Remove(employee);
             return NoContent();
         }
+
     }
 }
