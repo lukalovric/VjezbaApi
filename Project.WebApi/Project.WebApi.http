@@ -1,6 +1,6 @@
 @Project.WebApi_HostAddress = http://localhost:5072
 
-GET {{Project.WebApi_HostAddress}}/weatherforecast/
+GET {{Project.WebApi_HostAddress}}/Employee/
 Accept: application/json
 
 ###
