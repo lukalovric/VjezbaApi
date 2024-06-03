@@ -4,7 +4,7 @@ namespace Project.WebApi
 {
     public class Employee
     {
-        public Guid EmployeeID { get; set; }
+        public Guid Id { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string? Position { get; set; }
